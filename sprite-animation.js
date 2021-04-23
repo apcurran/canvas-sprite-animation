@@ -21,9 +21,11 @@ const dogSprite = (() => {
 
     const spriteWidth = 575;
     const spriteHeight = 523;
+    const staggerFrames = 5;
 
     let frameX = 0;
     let frameY = 0;
+    let gameFrame = 0;
 
     function getFrameX() {
         return frameX;
@@ -41,6 +43,14 @@ const dogSprite = (() => {
         return frameY;
     }
 
+    function getGameFrame() {
+        return gameFrame;
+    }
+
+    function incrementGameFrame() {
+        gameFrame++;
+    }
+
     return {
         dogImg,
         spriteWidth,
@@ -49,6 +59,9 @@ const dogSprite = (() => {
         setFrameX,
         resetFrameX,
         getFrameY,
+        getGameFrame,
+        incrementGameFrame,
+        staggerFrames,
     };
 })();
 
@@ -59,12 +72,15 @@ function animate() {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.drawImage(dogSprite.dogImg, dogSprite.getFrameX() * dogSprite.spriteWidth, dogSprite.getFrameY() * dogSprite.spriteHeight, dogSprite.spriteWidth, dogSprite.spriteHeight, 0, 0, dogSprite.spriteWidth, dogSprite.spriteHeight);
 
-    if (dogSprite.getFrameX() < 6) {
-        dogSprite.setFrameX(1);
-    } else {
-        dogSprite.resetFrameX();
+    if (dogSprite.getGameFrame() % dogSprite.staggerFrames === 0) {
+        if (dogSprite.getFrameX() < 6) {
+            dogSprite.setFrameX(1);
+        } else {
+            dogSprite.resetFrameX();
+        }
     }
 
+    dogSprite.incrementGameFrame();
     requestAnimationFrame(animate);
 }
 
